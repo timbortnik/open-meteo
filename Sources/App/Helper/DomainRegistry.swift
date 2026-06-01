@@ -654,7 +654,7 @@ extension DomainRegistry {
             let src = "\(OpenMeteo.dataDirectory)\(dir)"
             try await parseBucket(bucket).foreachConcurrent(nConcurrent: 4) { (bucket, profile) in
                 logger.info("AWS upload [Bucket \(bucket), profile \(profile ?? ""), time \(Timestamp.now().iso8601_YYYY_MM_dd_HH_mm)]")
-                let exclude = bucket == "openmeteo" && profile == nil ? ["*~", "*_previous_day*", "*rolling.om"] : ["*~", "*rolling.om"]
+                let exclude = bucket == "openmeteo" && profile == nil ? ["*~", "*_previous_day*", "*rolling.om"] : self == .google_weathernext_global_ensemble ? ["*~"] : ["*~", "*rolling.om"]
                 logger.info("AWS upload to bucket \(bucket)")
                 let startTimeAws = DispatchTime.now()
                 try Process.awsSync(
